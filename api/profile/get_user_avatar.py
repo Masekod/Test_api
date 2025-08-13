@@ -12,5 +12,5 @@ def get_user_avatar(auth_token):
     with open('images/avatar.jpg', 'wb') as f:
         f.write(get_user_avatar_response.content)
         os.startfile(path)
-    print("	Avatar received successfully")
+    print("Avatar received successfully")
     return get_user_avatar_response.status_code
