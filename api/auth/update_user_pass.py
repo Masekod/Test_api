@@ -12,10 +12,8 @@ def update_user_pass(auth_token):
         # "password": "321Ytrewq321",
         # "newPassword": "321Ytrewq"
 
-
     }
     return requests.patch(f'{BASE_URL}/api/auth/update-pass', headers=headers, json=data)
-
 
 # def update_user_pass(auth_token):
 #     login_token = login_user("bingo@mail.ru", "Qwerty123@123qwerty")

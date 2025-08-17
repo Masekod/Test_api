@@ -1,5 +1,4 @@
 import requests
-import os
 import allure
 from config.settings import BASE_URL, make_headers
 from utils.utils import add_body_to_allure

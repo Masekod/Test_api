@@ -1,7 +1,6 @@
 import requests
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-
 from config.settings import BASE_URL, make_headers
 
 
