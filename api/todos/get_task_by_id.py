@@ -8,12 +8,9 @@ get_task_id = None
 def get_task_by_id(auth_token):
     global get_task_id
     headers = make_headers(auth_token)
-    all_task = get_users_tasks(auth_token).json()
-    for task in all_task:
-        if task['title'] == 'test task':
-            get_task_id = task['id']
-            break
-    if get_task_id is None:
-        print("Задача не найдена")
+    all_tasks = get_users_tasks(auth_token).json()
 
-    return requests.get(f'{BASE_URL}/api/todos/{get_task_id}', headers=headers)
+    last_task = all_tasks[-1]
+    task_id = last_task['id']
+
+    return requests.get(f'{BASE_URL}/api/todos/{task_id}', headers=headers)

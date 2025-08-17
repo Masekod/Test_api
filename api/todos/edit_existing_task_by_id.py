@@ -1,6 +1,8 @@
 import requests
 from api.todos.get_users_tasks import get_users_tasks
 from config.settings import BASE_URL, make_headers
+from utils.utils import add_body_to_allure
+from utils.generator import edit_task_payload
 
 edit_task_id = None
 
@@ -8,21 +10,11 @@ edit_task_id = None
 def edit_existing_task_by_id(auth_token):
     global edit_task_id
     headers = make_headers(auth_token)
-    all_task = get_users_tasks(auth_token).json()
-    for task in all_task:
-        if task['title'] == 'test task':
-            edit_task_id = task['id']
-            old_task = task
-            break
-    if edit_task_id is None:
-        print("Задача не найдена")
-    else:
-        edit_task_payload = {
-            "title": "test task",
-            "description": old_task['description'],
-            "date": old_task['date'],
-            "time": old_task['time'],
-            "checked": old_task['checked']
-        }
+    all_tasks = get_users_tasks(auth_token).json()
+    last_task = all_tasks[-1]
+    task_id = last_task['id']
+    payload = edit_task_payload(last_task)
 
-    return requests.patch(f'{BASE_URL}/api/todos/edit/{edit_task_id}', headers=headers, json=edit_task_payload)
+    response = requests.patch(f'{BASE_URL}/api/todos/edit/{task_id}', headers=headers, json=payload)
+    add_body_to_allure(response.json(), "Тело ответа")
+    return response
