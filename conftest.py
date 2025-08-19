@@ -25,13 +25,13 @@ def cookie_token():
     return session
 
 
-@pytest.fixture
-def dict_names():
-    return {
-        "name": "Oleg",
-        "dateOfBirth": "2003-08-04",
-        "surname": "Bergov",
-        "patronymic": "Sergeevich",
-        "sex": "m",
-        "phone": "+7 (914) 172-72-67"
-    }
+# @pytest.fixture
+# def dict_names():
+#     return {
+#         "name": "Oleg",
+#         "dateOfBirth": "2003-08-04",
+#         "surname": "Bergov",
+#         "patronymic": "Sergeevich",
+#         "sex": "m",
+#         "phone": "+7 (914) 172-72-67"
+#     }

@@ -16,4 +16,5 @@
 - Python 3.12
 - [pytest](https://docs.pytest.org/)
 - [requests](https://requests.readthedocs.io/)
-
+- [Faker](https://faker.readthedocs.io/en/master/#basic-usage)
+- [allure-pytest](https://pypi.org/project/allure-pytest/)
