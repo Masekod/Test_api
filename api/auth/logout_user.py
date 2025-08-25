@@ -1,10 +1,14 @@
 import requests
 from config.settings import BASE_URL, make_headers
-from conftest import auth_token
-from utils.utils import log_allure_api
+from utils.utils import add_body_to_allure
 
 
-@log_allure_api
 def logout_user(auth_token):
     headers = make_headers(auth_token)
-    return requests.get(f'{BASE_URL}/api/auth/logout', headers=headers)
+    response = requests.get(f'{BASE_URL}/api/auth/logout', headers=headers)
+    try:
+        body = response.json()
+    except ValueError:
+        body = response.text or "Empty ewsponse body"
+    add_body_to_allure(body, "Тело ответа")
+    return response

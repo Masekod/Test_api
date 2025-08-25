@@ -4,7 +4,7 @@ import random
 fake = Faker("ru_RU")
 
 
-def generate_rando_user():
+def generate_random_user():
     return {
         "email": fake.email(),
         "password": fake.password(length=10)
