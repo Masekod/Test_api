@@ -1,6 +1,5 @@
 from faker import Faker
 import random
-
 fake = Faker("ru_RU")
 
 
@@ -11,18 +10,12 @@ def generate_random_user():
     }
 
 
-def generate_invalid_email():
-    return {
-        "email": fake.email(),
-        "password": "QWERTY!@#"
-    }
+def generate_random_email():
+    return fake.email()
 
 
-def generate_invalid_password():
-    return {
-        "email": "bingo@mail.ru",
-        "password": fake.password(length=10)
-    }
+def generate_random_password(password_length=10):
+    return fake.password(length=password_length)
 
 
 def generate_random_gender():
