@@ -1,6 +1,6 @@
 import allure
 import json
-
+import os
 
 # Добавляем тело запроса/ответа в Allure отчет
 def add_body_to_allure(body, body_type):
@@ -42,3 +42,15 @@ def api_debug(response):
         print("Response is not JSON")
 
     print("=== END DEBUG ===")
+
+
+EMAIL_FILE = os.path.join(os.path.dirname(__file__), "..", "config", "current_email.json")
+EMAIL_FILE = os.path.abspath(EMAIL_FILE)
+
+def get_current_email():
+    with open(EMAIL_FILE, "r") as file:
+        return json.load(file)["email"]
+
+def set_current_email(new_email: str):
+    with open(EMAIL_FILE, "w") as file:
+        json.dump({"email": new_email}, file, indent=4)

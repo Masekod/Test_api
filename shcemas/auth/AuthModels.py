@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr
-from typing import List
+from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import List, Union, Optional
 
 
 class AuthRequest(BaseModel):
@@ -19,10 +19,11 @@ class AuthSuccessResponse(BaseModel):
 
 
 class AuthBadRequestResponse(BaseModel):
-    message: List[str]
-    error: str
+    message: Union[str, List[str]]
+    error: Optional[str] = None
     statusCode: int
 
+    model_config = ConfigDict(extra="ignore")
 
 class AuthUnauthorizedResponse(BaseModel):
     message: str

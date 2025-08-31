@@ -1,9 +1,8 @@
 import requests
 from config.settings import BASE_URL, make_headers
-from data.login_data import success_login_data
+from conftest import auth_token
 
-def update_user_email(auth_token):
+
+def update_user_email(auth_token, data: dict):
     headers = make_headers(auth_token)
-    data = success_login_data()
-
     return requests.patch(f'{BASE_URL}/api/auth/update-email', headers=headers, json=data)

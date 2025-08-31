@@ -9,6 +9,6 @@ def logout_user(auth_token):
     try:
         body = response.json()
     except ValueError:
-        body = response.text or "Empty ewsponse body"
+        body = response.text or "Empty response body"
     add_body_to_allure(body, "Тело ответа")
     return response
