@@ -2,10 +2,9 @@ import allure
 import pytest
 from http import HTTPStatus
 from api.auth.login_user import login_user
-from config.settings import CREDENTIALS_PASSWORD
 from utils.generator import generate_random_email, generate_random_password
 from shcemas.auth.AuthModels import AuthSuccessResponse, AuthBadRequestResponse, AuthUnauthorizedResponse
-from utils.utils import get_current_email
+from utils.utils import get_current_email, get_current_password
 
 @allure.feature("Авторизация")
 @allure.story('Проверка статус кода ответа')
@@ -13,8 +12,8 @@ from utils.utils import get_current_email
 @pytest.mark.parametrize(
     "email, password, expected_status",
     [
-        (get_current_email(), CREDENTIALS_PASSWORD, HTTPStatus.OK),
-        (generate_random_email(), CREDENTIALS_PASSWORD, HTTPStatus.UNAUTHORIZED),
+        (get_current_email(), get_current_password(), HTTPStatus.OK),
+        (generate_random_email(), get_current_password(), HTTPStatus.UNAUTHORIZED),
         (get_current_email(), generate_random_password(), HTTPStatus.UNAUTHORIZED),
         ("", generate_random_password(), HTTPStatus.BAD_REQUEST),
         (generate_random_email(), "", HTTPStatus.BAD_REQUEST),
@@ -37,8 +36,8 @@ def test_login_status(email, password, expected_status):
 @pytest.mark.parametrize(
     "email, password, expected_response_body",
     [
-        (get_current_email(), CREDENTIALS_PASSWORD, AuthSuccessResponse),
-        (generate_random_email(), CREDENTIALS_PASSWORD, AuthUnauthorizedResponse),
+        (get_current_email(), get_current_password(), AuthSuccessResponse),
+        (generate_random_email(), get_current_password(), AuthUnauthorizedResponse),
         (get_current_email(), generate_random_password(), AuthUnauthorizedResponse),
         (generate_random_email(), "", AuthBadRequestResponse),
         ("", generate_random_password(), AuthBadRequestResponse),

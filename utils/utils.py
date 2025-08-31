@@ -54,3 +54,17 @@ def get_current_email():
 def set_current_email(new_email: str):
     with open(EMAIL_FILE, "w") as file:
         json.dump({"email": new_email}, file, indent=4)
+
+
+PASSWORD_FILE = os.path.join(os.path.dirname(__file__), "..", "config", "current_password.json")
+PASSWORD_FILE = os.path.abspath(PASSWORD_FILE)
+
+
+def get_current_password():
+    with open(PASSWORD_FILE, "r") as file:
+        return json.load(file)["password"]
+
+def set_current_password(new_password: str):
+    with open(PASSWORD_FILE, "w") as file:
+        json.dump({"password": new_password}, file, indent=4)
+

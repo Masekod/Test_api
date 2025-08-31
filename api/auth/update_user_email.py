@@ -1,6 +1,5 @@
 import requests
 from config.settings import BASE_URL, make_headers
-from conftest import auth_token
 
 
 def update_user_email(auth_token, data: dict):

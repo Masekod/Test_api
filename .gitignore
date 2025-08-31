@@ -2,3 +2,4 @@
 __pycache__/
 config/settings.py
 config/current_email.json
+config/current_password.json

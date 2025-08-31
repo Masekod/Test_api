@@ -2,8 +2,8 @@ import allure
 import pytest
 from http import HTTPStatus
 from api.auth.update_user_email import update_user_email
-from config.settings import NEW_EMAIL, INVALID_EMAIL, CREDENTIALS_PASSWORD
-from utils.utils import api_debug, get_current_email, set_current_email
+from config.settings import NEW_EMAIL, INVALID_EMAIL
+from utils.utils import api_debug, set_current_email, get_current_password
 
 
 
@@ -13,9 +13,9 @@ from utils.utils import api_debug, get_current_email, set_current_email
 @pytest.mark.parametrize(
     "data, expected_status",
     [
-        ({"email": NEW_EMAIL, "password": CREDENTIALS_PASSWORD}, HTTPStatus.OK),
-        ({"email": NEW_EMAIL, "password": CREDENTIALS_PASSWORD}, HTTPStatus.BAD_REQUEST),
-        ({"email": INVALID_EMAIL, "password": CREDENTIALS_PASSWORD}, HTTPStatus.BAD_REQUEST),
+        ({"email": NEW_EMAIL, "password": get_current_password()}, HTTPStatus.OK),
+        ({"email": NEW_EMAIL, "password": get_current_password()}, HTTPStatus.BAD_REQUEST),
+        ({"email": INVALID_EMAIL, "password": get_current_password()}, HTTPStatus.BAD_REQUEST),
     ]
 )
 def test_update_email(change_email, data, expected_status):
