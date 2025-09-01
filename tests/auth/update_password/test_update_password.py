@@ -27,7 +27,10 @@ def test_update_password(change_email, data, expected_status):
             set_current_password(NEW_PASSWORD)
 
 
-
+@allure.feature("Обновление пароля")
+@allure.story('Неавторизованный пользователь')
 def test_update_password_unauthorized():
-    response = update_user_password(None, {"password": NEW_PASSWORD})
-    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    with allure.step("Отправка запроса"):
+        response = update_user_password(None, {"password": NEW_PASSWORD})
+    with allure.step("Проверка статус кода ответа"):
+        assert response.status_code == HTTPStatus.UNAUTHORIZED

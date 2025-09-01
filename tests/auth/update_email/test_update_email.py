@@ -28,7 +28,10 @@ def test_update_email(change_email, data, expected_status):
             set_current_email(NEW_EMAIL)
 
 
-
+@allure.feature("Обновление почты")
+@allure.story('Неавторизованный пользователь')
 def test_update_email_unauthorized():
+    with allure.step("Отправка запроса"):
         response = update_user_email(None, {"email":NEW_EMAIL})
+    with allure.step("Проверка статус кода ответа"):
         assert response.status_code == HTTPStatus.UNAUTHORIZED

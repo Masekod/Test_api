@@ -22,4 +22,4 @@ def delete_existing_task_by_id(auth_token):
         response_body = {"message": "No content"}
 
     add_body_to_allure(response_body, "Тело ответа")
-    return response.status_code
+    return response

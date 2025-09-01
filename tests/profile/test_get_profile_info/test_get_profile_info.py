@@ -1,6 +1,8 @@
 from api.profile.get_user_profile import get_user_profile
+import allure
 
 
+@allure.feature("Получение данных пользователя")
 def test_get_profile_info(auth_token):
     response = get_user_profile(auth_token)
     body = response.json()
