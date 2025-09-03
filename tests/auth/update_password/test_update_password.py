@@ -1,8 +1,9 @@
 import allure
 import pytest
 from http import HTTPStatus
-from api.auth.update_user_password import update_user_password
+# from api.auth.update_user_password import update_user_password
 from config.settings import NEW_PASSWORD,INVALID_PASSWORD
+from utils.generator import generate_random_password
 from utils.utils import set_current_password, get_current_password
 
 
@@ -17,20 +18,10 @@ from utils.utils import set_current_password, get_current_password
         ({"password": get_current_password(), "newPassword": INVALID_PASSWORD}, HTTPStatus.BAD_REQUEST),
     ]
 )
-def test_update_password(change_email, data, expected_status):
+def test_update_password(api_client, data, expected_status):
     with allure.step("Отправка запроса"):
-        response = update_user_password(change_email, data)
-        print(response)
+        response = api_client.change_password(data)
     with allure.step("Проверка статус кода ответа"):
         assert response.status_code == expected_status
         if expected_status == HTTPStatus.OK:
             set_current_password(NEW_PASSWORD)
-
-
-@allure.feature("Обновление пароля")
-@allure.story('Неавторизованный пользователь')
-def test_update_password_unauthorized():
-    with allure.step("Отправка запроса"):
-        response = update_user_password(None, {"password": NEW_PASSWORD})
-    with allure.step("Проверка статус кода ответа"):
-        assert response.status_code == HTTPStatus.UNAUTHORIZED

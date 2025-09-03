@@ -19,11 +19,10 @@ class AuthSuccessResponse(BaseModel):
 
 
 class AuthBadRequestResponse(BaseModel):
-    message: Union[str, List[str]]
-    error: Optional[str] = None
+    message: List[str]
+    error: str
     statusCode: int
 
-    model_config = ConfigDict(extra="ignore")
 
 class AuthUnauthorizedResponse(BaseModel):
     message: str

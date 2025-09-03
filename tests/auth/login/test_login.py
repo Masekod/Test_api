@@ -1,10 +1,10 @@
 import allure
 import pytest
 from http import HTTPStatus
-from api.auth.login_user import login_user
 from utils.generator import generate_random_email, generate_random_password
 from shcemas.auth.AuthModels import AuthSuccessResponse, AuthBadRequestResponse, AuthUnauthorizedResponse
 from utils.utils import get_current_email, get_current_password
+
 
 @allure.feature("Авторизация")
 @allure.story('Проверка статус кода ответа')
@@ -19,15 +19,13 @@ from utils.utils import get_current_email, get_current_password
         (generate_random_email(), "", HTTPStatus.BAD_REQUEST),
     ]
 )
-def test_login_status(email, password, expected_status):
-    payload = {
+def test_login_status(api_client, email, password, expected_status):
+    credentials = {
         "email": email,
         "password": password,
     }
-    with allure.step("Отправка запроса"):
-        response = login_user(payload)
-    with allure.step("Проверка статус кода ответа"):
-        assert response.status_code == expected_status
+    response = api_client.login(credentials)
+    assert response.status_code == expected_status
 
 
 @allure.feature("Авторизация")
@@ -43,17 +41,10 @@ def test_login_status(email, password, expected_status):
         ("", generate_random_password(), AuthBadRequestResponse),
     ]
 )
-def test_login_response_body(email, password, expected_response_body):
-    payload = {
+def test_login_response_body(api_client, email, password, expected_response_body):
+    credentials = {
         "email": email,
         "password": password,
     }
-    with allure.step("Отправка запроса"):
-        response = login_user(payload)
-    with allure.step("Проверка структуры тела ответа"):
-        # Вспомним, что в Python для работы с JSON есть модуль json с методами loads() и dumps()
-        # Метод dumps() превращает словарь в JSON
-        # В Pydantic классы хранят данные как атрибуты класса
-        # чтобы получить словарь из модели Pydantic, используют метод model_dump()
-        # Таким образом, model_dump() возвращает словарь из модели
-        assert response.json() == expected_response_body(**response.json()).model_dump()
+    response = api_client.login(credentials)
+    assert response.json() == expected_response_body(**response.json()).model_dump()

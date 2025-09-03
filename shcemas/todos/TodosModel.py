@@ -1,5 +1,4 @@
-from pydantic import BaseModel, RootModel
-from typing import List
+from pydantic import BaseModel
 
 
 class TodosRequest(BaseModel):
@@ -21,12 +20,16 @@ class TodosSuccessResponse(BaseModel):
 
 
 class TodosBadRequestResponse(BaseModel):
-    error: str
     statusCode: int
-    message: int
-
+    message: str
+    error: str
 
 class TodosUnauthorizedResponse(BaseModel):
-    error: str
     statusCode: int
-    message: int
+    message: str
+    error: str
+
+class TodosNotFounded(BaseModel):
+    statusCode: int
+    message: str
+    error: str

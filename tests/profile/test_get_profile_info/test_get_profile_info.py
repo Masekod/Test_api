@@ -1,30 +1,25 @@
-from api.profile.get_user_profile import get_user_profile
 import allure
+import json
 
 
 @allure.feature("Получение данных пользователя")
-def test_get_profile_info(auth_token):
-    response = get_user_profile(auth_token)
-    body = response.json()
+def test_get_profile_info(api_client):
+    with allure.step("Данные пользователя"):
+        response = api_client.get_user_profile()
+        body = response.json()
+        allure.attach(
+            json.dumps(body, indent=4, ensure_ascii=False),
+            name="User Profile JSON",
+            attachment_type=allure.attachment_type.JSON
+        )
 
-    avatar = body['avatar']
-    date_of_birth = body['dateOfBirth']
-    id = body['id']
-    name = body['name']
-    patronymic = body['patronymic']
-    phone = body['phone']
-    sex = body['sex']
-    surname = body['surname']
-    user_id = body['userId']
-
-    assert len(avatar) > 0
-    assert len(date_of_birth) > 0
-    assert id > 0
-    assert isinstance(id, int)
-    assert len(name) > 0
-    assert len(patronymic) > 0
-    assert len(phone) > 0
-    assert len(sex) == 1
-    assert len(surname) > 0
-    assert user_id > 0
-    assert isinstance(user_id, int)
+    with allure.step("Проверка данных пользователя"):
+        assert len(body['avatar']) > 0
+        assert len(body['dateOfBirth']) > 0
+        assert body['id'] > 0 and isinstance(body['id'], int)
+        assert len(body['name']) > 0
+        assert len(body['patronymic']) > 0
+        assert len(body['phone']) > 0
+        assert len(body['sex']) == 1
+        assert len(body['surname']) > 0
+        assert body['userId'] > 0 and isinstance(body['userId'], int)
