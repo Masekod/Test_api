@@ -1,5 +1,6 @@
 import requests
 import allure
+import json
 from typing import Dict, Any
 from requests import HTTPError, RequestException, Timeout, Response
 from config.settings import BASE_URL
@@ -19,8 +20,8 @@ class ApiClient:
         self.refresh_token = None
 
     # Внутренний метод для выполнения HTTP-запросов с обработкой ошибок
-    def _request(self, method, endpoint, **kwargs) -> Response | None | Any:
-        url = f"{self.base_url}{endpoint}"
+    def _request(self, method, path, **kwargs) -> requests.Response | None | Any:
+        url = f"{self.base_url}/{path}"
         allure.attach(
             f"Request: {method} {url}",
             name="Request details",
@@ -32,11 +33,25 @@ class ApiClient:
                 name="Request body",
                 attachment_type=allure.attachment_type.JSON
             )
-
         try:
             response = self.session.request(method, url, **kwargs)
+            try:
+                body = response.json()
+                allure.attach(
+                    json.dumps(body, ensure_ascii=False, indent=3),
+                    # json.dumps - превращает словарь в строку, indent=3 - добавляет 3 отступа
+                    name="Response body",
+                    attachment_type=allure.attachment_type.JSON
+                )
+            except ValueError:
+                allure.attach(
+                    response.text,
+                    name = "Response body (non-JSON)",
+                    attachment_type=allure.attachment_type.TEXT
+                )
             response.raise_for_status()  # Обработка ошибок при 4хх/5xx статус кодов
             return response
+        # except requests.exceptions.RequestException as e: # универсальный способ
         except (HTTPError, ConnectionError, Timeout, RequestException) as e:
             allure.attach(
                 str(e),
@@ -45,15 +60,13 @@ class ApiClient:
             )
             print(f"Request error: {e}")
             # Возвращаем объект ответа даже при ошибке, чтобы тест мог его проанализировать
-            if isinstance(e, HTTPError):
-                return e.response
-            # В случае других ошибок возвращаем None или пустой объект ответа
-            return None
+            return e.response
+
 
     # Методы API
     @allure.step("Авторизация пользователя")
     def login(self, credentials: Dict[str, Any]) -> requests.Response:
-        response = self.session.post(f"{self.base_url}/api/auth/login", json=credentials)
+        response = self._request("POST", "api/auth/login", json=credentials)
         if response.status_code == 200:
             self.set_tokens(
                 response.json().get("accessToken"),
@@ -63,7 +76,7 @@ class ApiClient:
 
     @allure.step("Регистрация пользователя")
     def register(self, user_data: Dict[str, Any]) -> requests.Response:
-        response = self.session.post(f"{self.base_url}/api/auth/register", json=user_data)
+        response = self._request("POST","/api/auth/register", json=user_data)
         if response.status_code == 201 and "accessToken" in response.json():
             self.set_tokens(
                 response.json().get("accessToken"),
@@ -73,56 +86,56 @@ class ApiClient:
 
     @allure.step("Выход из системы")
     def logout(self) -> requests.Response:
-        return self.session.get(f"{self.base_url}/api/auth/logout")
+        return self._request("GET","api/auth/logout")
 
     @allure.step("Обновление токена")
     def refresh(self) -> requests.Response:
-        return self.session.get(f"{self.base_url}/api/auth/refresh")
+        return self._request("GET", "api/auth/refresh")
 
     @allure.step("Смена почты")
     def change_email(self, task_data) -> requests.Response:
-        return self.session.patch(f"{self.base_url}/api/auth/update-email", json=task_data)
+        return self._request("PATCH", "api/auth/update-email", json=task_data)
 
     @allure.step("Смена пароля")
     def change_password(self, task_data) -> requests.Response:
-        return self.session.patch(f"{self.base_url}/api/auth/update-pass", json=task_data)
+        return self._request("PATCH", "api/auth/update-pass", json=task_data)
 
     @allure.step("Сохранение данные пользователя")
     def save_user_profile(self, body) -> requests.Response:
-        return self.session.post(f"{self.base_url}/api/profile/save", json=body)
+        return self._request("POST", "api/profile/save", json=body)
 
     @allure.step("Получение аватара пользователя")
     def get_user_avatar(self) -> requests.Response:
-        return self.session.get(f"{self.base_url}/api/profile/image")
+        return self._request("GET", "api/profile/image")
 
     @allure.step("Получение данных пользователя")
     def get_user_profile(self) -> requests.Response:
-        return self.session.get(f"{self.base_url}/api/profile/get")
+        return self._request("GET", "api/profile/get")
 
     @allure.step("Создание задачи")
     def create_task(self, task_data) -> requests.Response:
-        return self.session.post(f"{self.base_url}/api/todos/create", json=task_data)
+        return self._request("POST", "api/todos/create", json=task_data)
 
     @allure.step("Обновление задачи по id")
     def update_task_by_id(self, task_id: str, task_data) -> requests.Response:
-        return self.session.patch(f"{self.base_url}/api/todos/edit/{task_id}", json=task_data)
+        return self._request("PATCH", f"api/todos/edit/{task_id}", json=task_data)
 
     @allure.step("Удаление задачи по id")
     def delete_task_by_id(self, task_id: str) -> requests.Response:
-        return self.session.delete(f"{self.base_url}/api/todos/delete/{task_id}")
+        return self._request("DELETE", f"api/todos/delete/{task_id}")
 
     @allure.step("Получение списка задач")
     def get_tasks(self) -> requests.Response:
-        return self.session.get(f"{self.base_url}/api/todos")
+        return self._request("GET", "api/todos")
 
     @allure.step("Получение задачи по title")
     def get_task_by_title(self, task_title: str) -> requests.Response:
         params = {"title": task_title}
-        return self.session.get(f"{self.base_url}/api/todos/search", params=params)
+        return self._request("GET", "api/todos/search", params=params)
 
     @allure.step("Получение задачи по id")
     def get_task_by_id(self, task_id: str) -> requests.Response:
-        return self.session.get(f"{self.base_url}/api/todos/{task_id}")
+        return self._request("GET", f"api/todos/{task_id}")
 
     @allure.step("Добавление аватара")
     def add_avatar(self, file_path: str) -> requests.Response:
@@ -133,7 +146,7 @@ class ApiClient:
 
         with open(file_path, 'rb') as file:
             files = {'image': (file_path.split("/")[-1], file)}
-            return self.session.post(f'{BASE_URL}/api/files/upload', files=files)
+            return self._request("POST", "api/files/upload", files=files)
 
     # Служебные методы
     def set_tokens(self, access_token, refresh_token):

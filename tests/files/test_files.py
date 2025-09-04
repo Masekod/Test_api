@@ -4,8 +4,6 @@ import allure
 
 
 @allure.feature("Добавление аватара")
-@allure.story('Валидный токен')
-@allure.title("Попытка загрузки аватара с невалидным токеном")
 @pytest.mark.parametrize(
     "file_path, expected_status",
     [

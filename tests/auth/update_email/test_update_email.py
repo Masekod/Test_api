@@ -1,7 +1,6 @@
 import allure
 import pytest
 from http import HTTPStatus
-# from api.auth.update_user_email import update_user_email
 from config.settings import NEW_EMAIL, INVALID_EMAIL
 from utils.utils import set_current_email, get_current_password
 

@@ -1,7 +1,6 @@
 import allure
 import pytest
 from http import HTTPStatus
-# from api.auth.update_user_password import update_user_password
 from config.settings import NEW_PASSWORD,INVALID_PASSWORD
 from utils.generator import generate_random_password
 from utils.utils import set_current_password, get_current_password
