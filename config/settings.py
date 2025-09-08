@@ -8,5 +8,8 @@ NEW_PASSWORD = generate_random_password()
 INVALID_EMAIL = "new_email_test.com"
 INVALID_PASSWORD = '1'
 
+CREDENTIALS_EMAIL = 'first_test@mail.ru'
+CREDENTIALS_PASSWORD = 'testwork'
+
 def make_headers(auth_token: str) -> dict:
     return {"Authorization": f"Bearer {auth_token}"}

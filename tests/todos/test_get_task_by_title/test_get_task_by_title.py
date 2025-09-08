@@ -5,7 +5,7 @@ from shcemas.todos.TodosModel import TodosSuccessResponse
 @allure.feature("Получение задачи по title")
 @allure.story("Успешное получение задачи")
 def test_get_task_by_title(api_client):
-    task_title = "Жестокий секунда войти."
+    task_title = "Падать ход налоговый мелькнуть возможно."
 
     with allure.step("Отправка запроса"):
         response = api_client.get_task_by_title(task_title)

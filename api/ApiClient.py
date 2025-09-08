@@ -1,3 +1,5 @@
+from xml.etree.ElementTree import indent
+
 import requests
 import allure
 import json
@@ -35,20 +37,39 @@ class ApiClient:
             )
         try:
             response = self.session.request(method, url, **kwargs)
-            try:
-                body = response.json()
+            if response.content and response.headers.get("Content-Type", "").startswith("application/json"):
                 allure.attach(
-                    json.dumps(body, ensure_ascii=False, indent=3),
-                    # json.dumps - превращает словарь в строку, indent=3 - добавляет 3 отступа
-                    name="Response body",
+                    json.dumps(response.json(), ensure_ascii=False, indent=3),
+                    name= "Response body",
                     attachment_type=allure.attachment_type.JSON
                 )
-            except ValueError:
+            else:
                 allure.attach(
-                    response.text,
-                    name = "Response body (non-JSON)",
+                    response.text or "Нет тела ответа",
+                    name= "Response body",
                     attachment_type=allure.attachment_type.TEXT
                 )
+
+
+            # try:
+            #     body = response.json()
+            #     allure.attach(
+            #         json.dumps(body, ensure_ascii=False, indent=3),
+            #         # json.dumps - превращает словарь в строку, indent=3 - добавляет 3 отступа
+            #         name="Response body",
+            #         attachment_type=allure.attachment_type.JSON
+            #     )
+            # except ValueError:
+            #     allure.attach(
+            #         response.text,
+            #         name = "Response body (non-JSON)",
+            #         attachment_type=allure.attachment_type.TEXT
+            #     )
+
+
+
+
+
             response.raise_for_status()  # Обработка ошибок при 4хх/5xx статус кодов
             return response
         # except requests.exceptions.RequestException as e: # универсальный способ
