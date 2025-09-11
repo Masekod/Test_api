@@ -97,7 +97,7 @@ class ApiClient:
 
     @allure.step("Регистрация пользователя")
     def register(self, user_data: Dict[str, Any]) -> requests.Response:
-        response = self._request("POST","/api/auth/register", json=user_data)
+        response = self._request("POST","api/auth/register", json=user_data)
         if response.status_code == 201 and "accessToken" in response.json():
             self.set_tokens(
                 response.json().get("accessToken"),

@@ -40,9 +40,10 @@ def test_register_status(api_client, email, password, expected_status):
     "email, password, expected_response_body",
     [
         (generate_random_email(), generate_random_password(), AuthSuccessResponse),
-        # завершается ошибкой, в ответ приходит структура {'message': 'Bad Request', 'statusCode': 400},
-        # которая не соответствует AuthBadRequest
-        # (get_current_email(), generate_random_password(), AuthBadRequestResponse),
+        (get_current_email(), generate_random_password(), AuthBadRequestResponse),
+        # Этот тест завершится с ошибкой,
+        # в ответ придёт структура {"message": "Bad Request", "statusCode": 400}, которая не соответствует
+        # AuthBadRequestResponse модели
         (generate_random_email(), "", AuthBadRequestResponse),
         ("", generate_random_password(), AuthBadRequestResponse),
         (generate_random_email(), generate_random_password(MIN_PASSWORD_LENGTH - 1), AuthBadRequestResponse),
