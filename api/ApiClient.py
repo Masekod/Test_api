@@ -1,5 +1,3 @@
-from xml.etree.ElementTree import indent
-
 import requests
 import allure
 import json
@@ -50,7 +48,6 @@ class ApiClient:
                     attachment_type=allure.attachment_type.TEXT
                 )
 
-
             # try:
             #     body = response.json()
             #     allure.attach(
@@ -65,10 +62,6 @@ class ApiClient:
             #         name = "Response body (non-JSON)",
             #         attachment_type=allure.attachment_type.TEXT
             #     )
-
-
-
-
 
             response.raise_for_status()  # Обработка ошибок при 4хх/5xx статус кодов
             return response

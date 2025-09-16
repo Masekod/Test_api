@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr, ConfigDict
-from typing import List, Union, Optional
+from pydantic import BaseModel, EmailStr
+from typing import List
 
 
 class AuthRequest(BaseModel):
