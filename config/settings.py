@@ -11,5 +11,5 @@ INVALID_PASSWORD = '1'
 CREDENTIALS_EMAIL = 'first_test@mail.ru'
 CREDENTIALS_PASSWORD = 'testwork'
 
-def make_headers(auth_token: str) -> dict:
-    return {"Authorization": f"Bearer {auth_token}"}
+# def make_headers(auth_token: str) -> dict:
+#     return {"Authorization": f"Bearer {auth_token}"}
